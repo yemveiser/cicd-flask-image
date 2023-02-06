@@ -3,9 +3,7 @@ name: Docker Image CI
 on:
   push:
     branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
-
+  
 jobs:
 
   build:
@@ -13,6 +11,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Code Checkout
+      uses: actions/checkout@v3
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_SECRET_ID }}
+        aws-secret-access-key: ${{ secrets.MY_AWS_SECRET_KEY }}
+        aws-region: ${{ env.AWS_REGION_NAME }}
+
+    - name: Connect to ECR
+      run: aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/x4t7e1f4
+    
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      run: |
+           docker build -t 002891/cicd-flask-image .
+           docker tag cicd-flask-image:latest public.ecr.aws/x4t7e1f4/cicd-flask-image:latest
+           docker push public.ecr.aws/x4t7e1f4/cicd-flask-image:latest
