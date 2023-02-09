@@ -26,6 +26,6 @@ jobs:
     
     - name: Build the Docker image
       run: |
-           docker build -t 002891/cicd-flask-image .
-           docker tag cicd-flask-image:latest public.ecr.aws/x4t7e1f4/002891/cicd-flask-image:latest
-           docker push public.ecr.aws/x4t7e1f4/002891/cicd-flask-image:latest
+           docker build -t cicd-flask-image .
+           ddocker tag cicd-flask-image:latest public.ecr.aws/x4t7e1f4/cicd-flask-image:yemmey
+           docker push public.ecr.aws/x4t7e1f4/cicd-flask-image:yemmey
